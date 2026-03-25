@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Minimal Form</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Bot</title>
 
   <style>
     body {
@@ -23,6 +23,11 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 15px;
     }
 
     input {
@@ -49,6 +54,12 @@
       background: #555;
     }
 
+    #status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
     @media (max-width: 480px) {
       .container {
         padding: 15px;
@@ -63,10 +74,45 @@
 
 <body>
   <div class="container">
-    <form>
-      <input type="text" placeholder="Enter something..." required />
-      <button type="submit">Submit</button>
+    <h2>LinkedIn Bot</h2>
+
+    <form id="myForm">
+      <input type="text" id="inputData" placeholder="Enter your idea..." required />
+      <button type="submit">Generate</button>
     </form>
+
+    <p id="status"></p>
   </div>
+
+  <script>
+    const form = document.getElementById("myForm");
+    const statusText = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const value = document.getElementById("inputData").value;
+      statusText.innerText = "Sending... ⏳";
+
+      try {
+        const response = await fetch("https://hook.eu2.make.com/1i9ijhr0shokw7dgq4kdigayg8xoyzyy", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            text: value
+          })
+        });
+
+        statusText.innerText = "Sent successfully ✅";
+        form.reset();
+
+      } catch (error) {
+        statusText.innerText = "Error sending data ❌";
+        console.error(error);
+      }
+    });
+  </script>
 </body>
 </html>
